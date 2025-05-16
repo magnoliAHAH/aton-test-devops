@@ -1,0 +1,22 @@
+server {
+    listen {{ port }} default_server;
+    listen [::]:{{ port }} default_server;
+
+    server_name {{ server_name }};
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen {{ port_ssl }} ssl default_server;
+    server_name {{ server_name }};
+
+    ssl_certificate /etc/nginx/ssl/selfsigned.crt;
+    ssl_certificate_key /etc/nginx/ssl/selfsigned.key;
+
+    root {{ root_path }};
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
