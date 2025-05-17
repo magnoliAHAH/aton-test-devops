@@ -15,11 +15,11 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          docker-compose --version
+          docker compose --version
 
-      - name: Run docker-compose
+      - name: Run docker compose
         working-directory: ./Task2
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
           sleep 5
           curl -vk https://localhost:443 || echo "Приложение не ответило"
