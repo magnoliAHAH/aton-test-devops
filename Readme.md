@@ -1,4 +1,4 @@
-Задание 4 находится в .github/workflow
+Задание 4 находится в .github/workflow  
 Для задания 3 требуется .env для настройки smtp со следующим содержанием
 SMTP_SERVER=123  
 SMTP_PORT=587  
