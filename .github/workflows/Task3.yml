@@ -1,0 +1,25 @@
+name: CI/CD with Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          docker-compose --version
+
+      - name: Run docker-compose
+        working-directory: ./Task2
+        run: |
+          docker-compose up -d --build
+          sleep 5
+          curl -vk https://localhost:443 || echo "Приложение не ответило"

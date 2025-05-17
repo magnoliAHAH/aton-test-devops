@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  nginx:
+    build: .
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+    restart: always

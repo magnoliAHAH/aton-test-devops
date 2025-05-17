@@ -1,6 +1,6 @@
 ---
 - name: Configure Nginx
-  hosts: webserver
+  hosts: atonErmin
   become: yes
 
   vars:
@@ -8,6 +8,10 @@
     port_ssl: 443
     server_name: localhost
     root_path: /var/www/html
+    index_text: Hello from ansible! Task 1
+    ssl_key: ssl/selfsigned.key
+    ssl_crt: ssl/selfsigned.crt
+    ssl_dest: /etc/nginx/ssl
 
   tasks:
     - name: Install Nginx
@@ -16,23 +20,42 @@
         state: present
         update_cache: yes
 
+    - name: Create SSL directory
+      file:
+        path: "{{ ssl_dest }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+
+    - name: Copy SSL certificate
+      copy:
+        src: "{{ ssl_crt }}"
+        dest: "{{ ssl_dest }}/selfsigned.crt"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy SSL key
+      copy:
+        src: "{{ ssl_key }}"
+        dest: "{{ ssl_dest }}/selfsigned.key"
+        owner: root
+        group: root
+        mode: "0600"
+
     - name: Copy index.html
       template:
         src: index.html.j2
         dest: "{{ root_path }}/index.html"
-        owner: root
-        group: root
-        mode: 0644
-      
+
     - name: Deploy nginx config
       template:
         src: nginx.conf.j2
         dest: /etc/nginx/sites-available/default
-        owner: root
-        group: root
-        mode: 0644
       notify: restart nginx
-        - name: Ensure nginx is running
+
+    - name: Ensure nginx is running
       service:
         name: nginx
         state: started
@@ -49,4 +72,3 @@
       service:
         name: nginx
         state: restarted
-
